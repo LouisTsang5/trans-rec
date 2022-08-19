@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import TransactionInput from './components/transactionInput';
 import TransactionList from './components/transactionList';
 import { loadList, storeList } from './lib/localStorage';
+import { calculateBalance } from './lib/transaction';
 
 const startingList = loadList() ?? [];
 
-export default function App() {
+const App: FunctionComponent = () => {
     const [transactionList, setTransactionList] = useState(startingList);
+    const balance = useMemo(() => calculateBalance(transactionList), [transactionList]);
 
+    //Store to local storage
     useEffect(() => {
         storeList(transactionList);
     }, [transactionList]);
@@ -27,6 +30,9 @@ export default function App() {
                 list={transactionList}
                 onRemoveTransaction={removeTransaction}
             />
+            <span>Balance: {balance}</span>
         </div>
     );
-}
+};
+
+export default App;

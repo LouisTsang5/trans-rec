@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { getDisplayName } from '../lib/transaction';
 
 type TransactionList = {
     list: TransactionData[],
@@ -9,8 +10,8 @@ const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTra
     return (<table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Date</th>
+                <th>Type</th>
                 <th>Description</th>
                 <th>Amount</th>
             </tr>
@@ -18,11 +19,11 @@ const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTra
         <tbody>
             {list.map(data => (
                 <tr key={data.id}>
-                    <td>{data.id}</td>
                     <td>{data.date.toISOString().split('T')[0]}</td>
+                    <td>{getDisplayName(data.type)}</td>
                     <td>{data.description}</td>
                     <td>{data.amount}</td>
-                    <td><a href="javascript:void(0)" onClick={() => onRemoveTransaction(data.id)}>x</a></td>
+                    <td><button onClick={() => onRemoveTransaction(data.id)}>x</button></td>
                 </tr>
             ))}
         </tbody>

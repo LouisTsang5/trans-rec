@@ -3,7 +3,7 @@ table {
 }
 
 .body-wrapper {
-    height: 60vh;
+    max-height: 60vh;
     overflow-y: scroll;
 }
 

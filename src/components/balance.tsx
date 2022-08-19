@@ -9,7 +9,7 @@ const Balance: FunctionComponent<BalanceProps> = ({ balance }) => {
         <div>
             <span>Balance: </span>
             <span style={{
-                color: balance > 0 ? 'green' : 'red'
+                color: balance >= 0 ? 'green' : 'red'
             }}>${balance}
             </span>
         </div>

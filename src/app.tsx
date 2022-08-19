@@ -1,10 +1,11 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import TransactionInput from './components/transactionInput';
-import TransactionList from './components/transactionList';
+import TransactionList from './components/transactionList/transactionList';
 import { loadList, storeList } from './lib/localStorage';
 import { calculateBalance } from './lib/transaction';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './components/navBar';
+import Balance from './components/balance';
 
 const startingList = loadList() ?? [];
 
@@ -25,14 +26,16 @@ const App: FunctionComponent = () => {
     return (
         <div>
             <NavBar />
-            <TransactionInput
-                onAddTransaction={(data) => setTransactionList(prev => [...prev, data])}
-            />
-            <TransactionList
-                list={transactionList}
-                onRemoveTransaction={removeTransaction}
-            />
-            <span>Balance: {balance}</span>
+            <div className='px-2'>
+                <TransactionInput
+                    onAddTransaction={(data) => setTransactionList(prev => [...prev, data])}
+                />
+                <TransactionList
+                    list={transactionList}
+                    onRemoveTransaction={removeTransaction}
+                />
+                <Balance balance={balance} />
+            </div>
         </div>
     );
 };

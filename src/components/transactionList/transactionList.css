@@ -1,0 +1,31 @@
+table {
+    table-layout: fixed;
+}
+
+.body-wrapper {
+    height: 60vh;
+    overflow-y: scroll;
+}
+
+.col-date {
+    width: 20%;
+}
+
+.col-desc {
+    width: 45%;
+}
+
+.col-amt {
+    width: 25%;
+    text-align: right;
+}
+
+.col-del {
+    width: 10%;
+}
+
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { getDisplayName, getTransactionType, transactionTypeDisplayMap } from '../lib/transaction';
+import { getDisplayName, getTransactionType, transactionTypeDisplayMap } from '../../lib/transaction';
+import './transacrionInput.css';
 
 type TransactionInputProps = {
     onAddTransaction: (data: TransactionData) => void,
@@ -16,11 +17,29 @@ const startFormData: TransactionData = {
 
 const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTransaction }) => {
     const [data, setData] = useState(startFormData);
+    const [isDescError, setIsDescError] = useState(false);
+    const [isAmtError, setIsAmtError] = useState(false);
 
     const handleAddTransaction = (e: React.MouseEvent) => {
         e.preventDefault();
+        if (!handleDataCheck()) return;
         onAddTransaction({ ...data, id: uuidv4() });
         setData(startFormData);
+    };
+
+    const handleDataCheck = () => {
+        let hasError = false;
+        if (!data.description) {
+            setIsDescError(true);
+            setTimeout(() => setIsDescError(false), 450);
+            hasError = true;
+        }
+        if (!data.amount) {
+            setIsAmtError(true);
+            setTimeout(() => setIsAmtError(false), 450);
+            hasError = true;
+        }
+        return !hasError;
     };
 
     return (
@@ -56,7 +75,7 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
                 <label htmlFor='descriptionInput'>Description</label>
                 <input
                     id='descriptionInput'
-                    className='form-control'
+                    className={`form-control ${isDescError ? 'error' : ''}`}
                     type="text"
                     value={data.description}
                     onChange={(e) => setData({ ...data, description: e.target.value })}
@@ -67,7 +86,8 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
                 <div className='col-8 form-group'>
                     <span>Amount</span>
                     <input
-                        className='form-control'
+                        onFocus={e => e.target.value = ''}
+                        className={`form-control ${isAmtError ? 'error' : ''}`}
                         min="0"
                         type="number"
                         step="0.01"

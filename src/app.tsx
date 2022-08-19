@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
-import TransactionInput from './components/transactionInput';
+import TransactionInput from './components/transactionInput/transactionInput';
 import TransactionList from './components/transactionList/transactionList';
 import { loadList, storeList } from './lib/localStorage';
 import { calculateBalance } from './lib/transaction';

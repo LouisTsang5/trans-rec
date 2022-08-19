@@ -17,6 +17,11 @@ const startFormData: TransactionData = {
 const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTransaction }) => {
     const [data, setData] = useState(startFormData);
 
+    const handleAddTransaction = () => {
+        onAddTransaction({ ...data, id: uuidv4() });
+        setData(startFormData);
+    };
+
     return (
         <>
             <div>
@@ -52,6 +57,7 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
             <div>
                 <span>Amount</span>
                 <input
+                    min="0"
                     type="number"
                     step="0.01"
                     value={data.amount}
@@ -59,7 +65,7 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
                 />
             </div>
 
-            <button onClick={() => onAddTransaction({ ...data, id: uuidv4() })}>Add</button>
+            <button onClick={handleAddTransaction}>Add</button>
         </>
     );
 };

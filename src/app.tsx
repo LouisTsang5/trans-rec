@@ -3,6 +3,8 @@ import TransactionInput from './components/transactionInput';
 import TransactionList from './components/transactionList';
 import { loadList, storeList } from './lib/localStorage';
 import { calculateBalance } from './lib/transaction';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import NavBar from './components/navBar';
 
 const startingList = loadList() ?? [];
 
@@ -22,7 +24,7 @@ const App: FunctionComponent = () => {
 
     return (
         <div>
-            <h2>TransRec</h2>
+            <NavBar />
             <TransactionInput
                 onAddTransaction={(data) => setTransactionList(prev => [...prev, data])}
             />

@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TransactionInput from './components/transactionInput';
 import TransactionList from './components/transactionList';
+import { loadList, storeList } from './lib/localStorage';
 
-const startList: TransactionData[] = [];
+const startingList = loadList() ?? [];
 
 export default function App() {
-    const [transactionList, setTransactionList] = useState(startList);
+    const [transactionList, setTransactionList] = useState(startingList);
+
+    useEffect(() => {
+        storeList(transactionList);
+    }, [transactionList]);
 
     const removeTransaction = (id: string) => {
         const newList = transactionList.filter(data => data.id !== id);

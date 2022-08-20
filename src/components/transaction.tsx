@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getDisplayName, getTransactionType, transactionTypeDisplayMap } from '../lib/transaction';
 
 type TransactionProps = {
@@ -18,6 +18,7 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
 
     if (!transaction) return <span>Cannot find transaction</span>;
 
+    const navigate = useNavigate();
     const [isSaved, setIsSaved] = useState(false);
     const [updatedData, setUpdatedData] = useState(toUpdatedTransactionData(transaction));
     useEffect(() => setUpdatedData(transaction), [transaction]);
@@ -26,6 +27,7 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
         e.preventDefault();
         onSave(transaction.id, updatedData);
         setIsSaved(true);
+        navigate(-1);
     };
 
     return (

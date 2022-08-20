@@ -11,3 +11,5 @@ type TransactionData = {
     type: TransactionType,
     amount: number
 }
+
+type UpdatedTransactionData = Omit<TransactionData, 'id'>;

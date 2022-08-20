@@ -8,6 +8,7 @@ type TransactionProps = {
 }
 
 function toUpdatedTransactionData(data: TransactionData): UpdatedTransactionData {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...remain } = data;
     return remain;
 }

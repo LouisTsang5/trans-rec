@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './components/navBar';
 import Home from './pages/home';
 import { Route, Routes } from 'react-router-dom';
-import Transaction from './components/transaction';
+import Transaction from './pages/transaction';
 
 const startingList = loadList() ?? [];
 

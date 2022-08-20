@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './transactionList.css';
 
@@ -8,8 +8,12 @@ type TransactionList = {
 }
 
 const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTransaction }) => {
-    const navigate = useNavigate();
+    //Scroll to bottom function
+    const listBtmElem = useRef<HTMLDivElement>(null);
+    useEffect(() => listBtmElem.current?.scrollIntoView({ behavior: 'smooth' }), []);
 
+    //Navigation to transaction detail page
+    const navigate = useNavigate();
     const onClickTransaction = (id: string) => {
         navigate(`/transactions/${id}`);
     };
@@ -57,6 +61,8 @@ const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTra
                         ))}
                     </tbody>
                 </table>
+                {/* For scrolling to bottom automatically*/}
+                <div ref={listBtmElem}></div>
             </div>
         </>
     );

@@ -31,6 +31,11 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
         navigate(-1);
     };
 
+    const onClickCancel = (e: React.MouseEvent) => {
+        e.preventDefault();
+        navigate(-1);
+    };
+
     return (
         <>
             <form>
@@ -67,7 +72,7 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
                 </div>
 
                 <div className='form-group'>
-                    <label>Amt</label>
+                    <label>Amount</label>
                     <input type='number'
                         min='0'
                         step='0.01'
@@ -76,7 +81,14 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
                         onChange={(e) => setUpdatedData(prev => ({ ...prev, amount: parseFloat(e.target.value) }))}
                     />
                 </div>
-                <button className='btn btn-primary my-2 w-100' onClick={onClickSave}>Save</button>
+                <div className='form-group row my-2'>
+                    <div className='col-6'>
+                        <button className='btn btn-outline-primary w-100' onClick={onClickCancel}>Cancel</button>
+                    </div>
+                    <div className='col-6'>
+                        <button className='btn btn-primary w-100' onClick={onClickSave}>Save</button>
+                    </div>
+                </div>
                 {isSaved && <div className='w-100 d-flex justify-content-center'><span>Data Saved</span></div>}
             </form>
         </>

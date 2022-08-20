@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './transactionList.css';
 
 type TransactionList = {
@@ -7,6 +8,7 @@ type TransactionList = {
 }
 
 const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTransaction }) => {
+    const navigate = useNavigate();
     return (
         <>
             <table className='table mb-0'>
@@ -23,7 +25,7 @@ const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTra
                 <table className='table'>
                     <tbody>
                         {list.map(data => (
-                            <tr key={data.id}>
+                            <tr key={data.id} onClick={() => navigate(`/transactions/${data.id}`)}>
                                 <td className='col-date'>
                                     {data.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
                                 </td>

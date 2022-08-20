@@ -3,6 +3,9 @@ import { loadList, storeList } from './lib/localStorage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './components/navBar';
 import Home from './pages/home';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import TransactionList from './components/transactionList/transactionList';
+import Transaction from './components/transaction';
 
 const startingList = loadList() ?? [];
 
@@ -23,15 +26,38 @@ const App: FunctionComponent = () => {
         setTransactionList(prev => [...prev, data]);
     };
 
+    const updateTransaction = (id: string, newData: UpdatedTransactionData) => {
+        const transaction = transactionList.find(data => data.id === id);
+        if (!transaction) throw new Error(`Cannot find transaction with id ${id}`);
+        transaction.amount = newData.amount;
+        transaction.date = newData.date;
+        transaction.description = newData.description;
+        transaction.type = newData.type;
+        setTransactionList([...transactionList]);
+    };
+
     return (
         <div>
             <NavBar />
             <div className='px-2'>
-                <Home
-                    transactionList={transactionList}
-                    onAddTransaction={addTransaction}
-                    onRemoveTransaction={removeTransaction}
-                />
+                <BrowserRouter>
+                    <Routes>
+                        <Route path='/' element={
+                            <Home
+                                transactionList={transactionList}
+                                onAddTransaction={addTransaction}
+                                onRemoveTransaction={removeTransaction}
+                            />
+                        } />
+                        <Route path='transactions' element={
+                            <TransactionList
+                                list={transactionList}
+                                onRemoveTransaction={removeTransaction}
+                            />
+                        } />
+                        <Route path='transactions/:transactionId' element={<Transaction list={transactionList} onSave={updateTransaction} />} />
+                    </Routes>
+                </BrowserRouter>
             </div>
         </div>
     );

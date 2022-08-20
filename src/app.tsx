@@ -3,8 +3,7 @@ import { loadList, storeList } from './lib/localStorage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './components/navBar';
 import Home from './pages/home';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import TransactionList from './components/transactionList/transactionList';
+import { Route, Routes } from 'react-router-dom';
 import Transaction from './components/transaction';
 
 const startingList = loadList() ?? [];
@@ -40,24 +39,16 @@ const App: FunctionComponent = () => {
         <div>
             <NavBar />
             <div className='px-2'>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path='/' element={
-                            <Home
-                                transactionList={transactionList}
-                                onAddTransaction={addTransaction}
-                                onRemoveTransaction={removeTransaction}
-                            />
-                        } />
-                        <Route path='transactions' element={
-                            <TransactionList
-                                list={transactionList}
-                                onRemoveTransaction={removeTransaction}
-                            />
-                        } />
-                        <Route path='transactions/:transactionId' element={<Transaction list={transactionList} onSave={updateTransaction} />} />
-                    </Routes>
-                </BrowserRouter>
+                <Routes>
+                    <Route path='/' element={
+                        <Home
+                            transactionList={transactionList}
+                            onAddTransaction={addTransaction}
+                            onRemoveTransaction={removeTransaction}
+                        />
+                    } />
+                    <Route path='transactions/:transactionId' element={<Transaction list={transactionList} onSave={updateTransaction} />} />
+                </Routes>
             </div>
         </div>
     );

@@ -1,5 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { loadList, storeList } from './lib/localStorage';
+import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './components/navBar';
 import Home from './pages/home';

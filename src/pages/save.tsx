@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
-import { loadList, parseData } from '../../lib/localStorage';
-import './save.css';
+import React, { FunctionComponent, useRef } from 'react';
+import { useErrorInput } from '../lib/errorInput/errorInput';
+import { loadList, parseData } from '../lib/localStorage';
+import '../lib/errorInput/errorInput.css';
 
 const Save: FunctionComponent = () => {
     const downloadElem = useRef<HTMLAnchorElement>(null);
@@ -14,13 +15,7 @@ const Save: FunctionComponent = () => {
         elem.click();
     };
 
-    const [isFileError, setIsFileError] = useState(false);
-    useEffect(() => {
-        if (!isFileError) return;
-        const timeout = setTimeout(() => setIsFileError(false), 450);
-        return () => clearTimeout(timeout);
-    }, [isFileError]);
-
+    const [isFileError, setIsFileError] = useErrorInput(false);
     const uploadElem = useRef<HTMLInputElement>(null);
     const onClickUpload = (e: React.MouseEvent) => {
         e.preventDefault();

@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { getDisplayName, getTransactionType, transactionTypeDisplayMap } from '../../lib/transaction';
-import './transacrionInput.css';
+import { useErrorInput } from '../lib/errorInput/errorInput';
+import { getDisplayName, getTransactionType, transactionTypeDisplayMap } from '../lib/transaction';
+import '../lib/errorInput/errorInput.css';
 
 type TransactionInputProps = {
     onAddTransaction: (data: TransactionData) => void,
@@ -17,8 +18,8 @@ const startFormData: TransactionData = {
 
 const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTransaction }) => {
     const [data, setData] = useState(startFormData);
-    const [isDescError, setIsDescError] = useState(false);
-    const [isAmtError, setIsAmtError] = useState(false);
+    const [isDescError, setIsDescError] = useErrorInput(false);
+    const [isAmtError, setIsAmtError] = useErrorInput(false);
 
     const handleAddTransaction = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -31,12 +32,10 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
         let hasError = false;
         if (!data.description) {
             setIsDescError(true);
-            setTimeout(() => setIsDescError(false), 450);
             hasError = true;
         }
         if (!data.amount) {
             setIsAmtError(true);
-            setTimeout(() => setIsAmtError(false), 450);
             hasError = true;
         }
         return !hasError;

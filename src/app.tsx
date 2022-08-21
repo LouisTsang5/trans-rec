@@ -5,7 +5,7 @@ import NavBar from './components/navBar';
 import Home from './pages/home';
 import { Route, Routes } from 'react-router-dom';
 import Transaction from './pages/transaction';
-import Save from './pages/save/save';
+import Save from './pages/save';
 
 const startingList = loadList() ?? [];
 

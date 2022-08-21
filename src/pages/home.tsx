@@ -1,6 +1,6 @@
 import { FunctionComponent, useMemo } from 'react';
 import Balance from '../components/balance';
-import TransactionInput from '../components/transactionInput/transactionInput';
+import TransactionInput from '../components/transactionInput';
 import TransactionList from '../components/transactionList/transactionList';
 import { calculateBalance } from '../lib/transaction';
 

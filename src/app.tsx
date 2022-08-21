@@ -5,6 +5,7 @@ import NavBar from './components/navBar';
 import Home from './pages/home';
 import { Route, Routes } from 'react-router-dom';
 import Transaction from './pages/transaction';
+import Save from './pages/save/save';
 
 const startingList = loadList() ?? [];
 
@@ -47,7 +48,10 @@ const App: FunctionComponent = () => {
                             onRemoveTransaction={removeTransaction}
                         />
                     } />
-                    <Route path='transactions/:transactionId' element={<Transaction list={transactionList} onSave={updateTransaction} />} />
+                    <Route path='transactions/:transactionId' element={
+                        <Transaction list={transactionList} onSave={updateTransaction} />
+                    } />
+                    <Route path='save' element={<Save />} />
                 </Routes>
             </div>
         </div>

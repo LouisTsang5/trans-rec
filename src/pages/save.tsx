@@ -122,7 +122,7 @@ const Save: FunctionComponent<SaveProps> = ({ onUpload }) => {
             <a ref={downloadElem} style={{ display: 'none' }} />
             <button className='btn btn-outline-success' onClick={onClickDownload}>Download Data</button>
 
-            <input type='file' className={`form-control ${isFileError && 'error'}`} ref={uploadElem} onChange={() => dispatchUploadState({ type: 'Restart' })} style={{ width: '70%' }} />
+            <input type='file' className={`form-control ${isFileError && 'error'}`} ref={uploadElem} onChange={() => dispatchUploadState({ type: 'Restart' })} disabled={uploadState.isSuccess} style={{ width: '70%' }} />
             <button className='btn btn-outline-primary' onClick={onClickUpload} disabled={uploadState.isUploading || uploadState.isSuccess || uploadState.isFailed}>
                 {
                     uploadState.isUploading ? 'Uploading' :

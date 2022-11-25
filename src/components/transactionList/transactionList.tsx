@@ -10,7 +10,7 @@ type TransactionList = {
 const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTransaction }) => {
     //Scroll to bottom function
     const listBtmElem = useRef<HTMLDivElement>(null);
-    useEffect(() => listBtmElem.current?.scrollIntoView({ behavior: 'smooth' }), []);
+    useEffect(() => listBtmElem.current?.scrollIntoView({ behavior: 'smooth' }), [list]);
 
     //Navigation to transaction detail page
     const navigate = useNavigate();

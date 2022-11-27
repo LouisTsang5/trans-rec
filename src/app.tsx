@@ -38,9 +38,11 @@ const App: FunctionComponent = () => {
     };
 
     return (
-        <div>
+        <div style={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>
+            <div style={{ flex: '0 1 auto' }}>
             <NavBar />
-            <div className='px-2'>
+            </div>
+            <div className='px-2' style={{ flex: '1 1 auto' }}>
                 <Routes>
                     <Route path='/' element={
                         <Home

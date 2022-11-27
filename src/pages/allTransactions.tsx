@@ -18,17 +18,50 @@ function getTargetIndex(elems: HTMLElement[], y: number) {
     return index;
 }
 
-const ListItem: FunctionComponent<{ transaction: TransactionData }> = ({ transaction }) => {
+const ListItem: FunctionComponent<{
+    transaction: TransactionData,
+    onTouchMove?: (e: React.TouchEvent<HTMLElement>) => void,
+    onTouchEnd?: (e: React.TouchEvent<HTMLElement>) => void,
+}> = ({ transaction, onTouchMove, onTouchEnd }) => {
+    const { description, date, type, amount } = transaction;
     return (
-        <span
-            style={{
-                display: 'block',
-                border: 'black solid 1px',
-                borderRadius: '10px',
-            }}
-        >
-            {transaction.description}
-        </span>
+        <>
+            <td
+                style={{ width: '5%', padding: '0.4rem', touchAction: 'none' }}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="grey" className="bi bi-x" viewBox="-5 0 40 125">
+                    <path xmlns="http://www.w3.org/2000/svg" className="cls-1" d="M15,0A15,15,0,1,1,0,15,15,15,0,0,1,15,0Zm0,92.93a15,15,0,1,1-15,15,15,15,0,0,1,15-15Zm0-46.47a15,15,0,1,1-15,15,15,15,0,0,1,15-15Z" />
+                </svg>
+            </td>
+
+            <td style={{ width: '20%' }}>
+                {date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
+            </td>
+
+            <td style={{ width: '40%' }}>
+                {description}
+            </td>
+
+            <td
+                style={{
+                    color: type === 'd' ? 'green' : 'red',
+                    textAlign: 'right',
+                    width: '20%',
+                }}
+            >
+                {`${type === 'd' ? '+' : '-'}${amount.toFixed(2)}`}
+            </td>
+
+            <td style={{ width: '10%' }}>
+                <div className='d-flex justify-content-center align-items-end'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </div>
+            </td>
+        </>
     );
 };
 
@@ -53,7 +86,7 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
     const [touchedY, setTouchedY] = useState(undefined as number | undefined);
     const [draggedI, setDraggedI] = useState(undefined as undefined | number);
 
-    const handleTouchMove = (i: number, e: React.TouchEvent<HTMLLIElement>) => {
+    const handleTouchMove = (i: number, e: React.TouchEvent<HTMLElement>) => {
         setTouchedY(e.targetTouches[0].pageY);
         setDraggedI(i);
     };
@@ -69,41 +102,58 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
 
     return (
         <>
-            <ul style={{ touchAction: 'none', padding: '0' }}>
-                {
-                    touchedY !== undefined && isYAboveElem(listElems.current[0], touchedY) &&
-                    <DropSpace />
-                }
-                {
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <table className='table mb-0' style={{ flex: '0 1 auto' }}>
+                    <thead>
+                        <tr>
+                            <th style={{ width: '5%' }}></th>
+                            <th style={{ width: '20%' }}>Date</th>
+                            <th style={{ width: '40%' }}>Description</th>
+                            <th style={{ width: '20%', textAlign: 'right' }}>Amt</th>
+                            <th style={{ width: '10%' }}></th>
+                        </tr>
+                    </thead>
+                </table>
 
-                    list.map((transaction, i) => (<>
-                        <li
-                            key={i}
-                            ref={elem => listElems.current[i] = elem as HTMLElement}
-                            style={{ display: draggedI === i ? 'none' : 'block' }}
-                            onTouchMove={handleTouchMove.bind(undefined, i)}
-                            onTouchEnd={handleTouchEnd}
-                        >
-                            <ListItem transaction={transaction} />
+                <div style={{ flex: '1 1 auto', overflowY: 'scroll' }}>
+                    <table className='table'>
+                        <tbody>
                             {
-                                touchedY !== undefined && isYInElem(listElems.current[i], touchedY) &&
+                                touchedY !== undefined && isYAboveElem(listElems.current[0], touchedY) &&
                                 <DropSpace />
                             }
-                        </li>
-                    </>))
-                }
-                {
-                    draggedI !== undefined && touchedY !== undefined &&
-                    <li style={{
-                        position: 'absolute',
-                        display: 'block',
-                        left: `1rem`,
-                        top: touchedY,
-                    }} >
-                        <ListItem transaction={list[draggedI]} />
-                    </li>
-                }
-            </ul >
+                            {list.map((transaction, i) => (
+                                <tr
+                                    key={i}
+                                    ref={elem => listElems.current[i] = elem as HTMLElement}
+                                    style={{ display: draggedI === i ? 'none' : 'block' }}
+                                >
+                                    <ListItem
+                                        transaction={transaction}
+                                        onTouchMove={handleTouchMove.bind(undefined, i)}
+                                        onTouchEnd={handleTouchEnd}
+                                    />
+                                    {
+                                        touchedY !== undefined && isYInElem(listElems.current[i], touchedY) &&
+                                        <DropSpace />
+                                    }
+                                </tr>
+                            ))}
+                            {
+                                draggedI !== undefined && touchedY !== undefined &&
+                                <tr style={{
+                                    position: 'absolute',
+                                    display: 'block',
+                                    left: `1rem`,
+                                    top: touchedY,
+                                }} >
+                                    <ListItem transaction={list[draggedI]} />
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </>
     );
 };

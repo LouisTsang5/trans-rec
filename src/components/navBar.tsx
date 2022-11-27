@@ -21,6 +21,7 @@ const NavBar: FunctionComponent = () => {
                     </button>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                         <li><a className="dropdown-item" href="#" onClick={() => navigate('save')}>Save</a></li>
+                        <li><a className="dropdown-item" href="#" onClick={() => navigate('transactions')}>Transactions</a></li>
                     </ul>
                 </div>
             </div>

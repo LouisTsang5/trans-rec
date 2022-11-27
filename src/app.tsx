@@ -7,6 +7,7 @@ import Home from './pages/home';
 import { Route, Routes } from 'react-router-dom';
 import Transaction from './pages/transaction';
 import Save from './pages/save';
+import AllTransactions from './pages/allTransactions';
 
 const startingList = loadList() ?? [];
 
@@ -40,7 +41,7 @@ const App: FunctionComponent = () => {
     return (
         <div style={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>
             <div style={{ flex: '0 1 auto' }}>
-            <NavBar />
+                <NavBar />
             </div>
             <div className='px-2' style={{ flex: '1 1 auto' }}>
                 <Routes>
@@ -51,6 +52,11 @@ const App: FunctionComponent = () => {
                             onRemoveTransaction={removeTransaction}
                         />
                     } />
+
+                    <Route path='transactions' element={
+                        <AllTransactions list={transactionList} />
+                    } />
+
                     <Route path='transactions/:transactionId' element={
                         <Transaction list={transactionList} onSave={updateTransaction} />
                     } />

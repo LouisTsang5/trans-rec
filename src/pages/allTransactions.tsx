@@ -1,4 +1,5 @@
 import { FunctionComponent, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function isYInElem(elem: HTMLElement, y: number) {
     const rect = elem.getBoundingClientRect();
@@ -22,16 +23,27 @@ const ListItem: FunctionComponent<{
     transaction: TransactionData,
     onTouchMove?: (e: React.TouchEvent<HTMLElement>) => void,
     onTouchEnd?: (e: React.TouchEvent<HTMLElement>) => void,
-}> = ({ transaction, onTouchMove, onTouchEnd }) => {
-    const { description, date, type, amount } = transaction;
+    onRemoveTransaction?: (id: string) => void,
+}> = ({ transaction, onTouchMove, onTouchEnd, onRemoveTransaction }) => {
+    const { description, date, type, amount, id } = transaction;
+
+    const navigate = useNavigate();
+    const onClickTransaction = () => {
+        navigate(`/transactions/${id}`);
+    };
+
+    const onClickRemove = onRemoveTransaction ? () => {
+        onRemoveTransaction(id);
+    } : undefined;
+
     return (
         <>
             <td
-                style={{ width: '5%', padding: '0.4rem', touchAction: 'none' }}
+                style={{ width: '5%', padding: '0rem', touchAction: 'none' }}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="grey" className="bi bi-x" viewBox="-5 0 40 125">
+                <svg xmlns="http://www.w3.org/2000/svg" height="25%" width="40%" fill="grey" className="bi bi-x" viewBox="-5 0 40 125">
                     <path xmlns="http://www.w3.org/2000/svg" className="cls-1" d="M15,0A15,15,0,1,1,0,15,15,15,0,0,1,15,0Zm0,92.93a15,15,0,1,1-15,15,15,15,0,0,1,15-15Zm0-46.47a15,15,0,1,1-15,15,15,15,0,0,1,15-15Z" />
                 </svg>
             </td>
@@ -40,7 +52,7 @@ const ListItem: FunctionComponent<{
                 {date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
             </td>
 
-            <td style={{ width: '40%' }}>
+            <td style={{ width: '45%' }} onClick={onClickTransaction}>
                 {description}
             </td>
 
@@ -50,11 +62,12 @@ const ListItem: FunctionComponent<{
                     textAlign: 'right',
                     width: '20%',
                 }}
+                onClick={onClickTransaction}
             >
                 {`${type === 'd' ? '+' : '-'}${amount.toFixed(2)}`}
             </td>
 
-            <td style={{ width: '10%' }}>
+            <td style={{ width: '10%' }} onClick={onClickRemove}>
                 <div className='d-flex justify-content-center align-items-end'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -79,9 +92,10 @@ const DropSpace: FunctionComponent = () => {
 type AllTransactionProps = {
     list: TransactionData[],
     onRearrange: (from: number, to: number) => void,
+    onRemoveTransaction: (id: string) => void,
 }
 
-const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearrange }) => {
+const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearrange, onRemoveTransaction }) => {
     const listElems = useRef<HTMLElement[]>([]);
     const [touchedY, setTouchedY] = useState(undefined as number | undefined);
     const [draggedI, setDraggedI] = useState(undefined as undefined | number);
@@ -108,7 +122,7 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
                         <tr>
                             <th style={{ width: '5%' }}></th>
                             <th style={{ width: '20%' }}>Date</th>
-                            <th style={{ width: '40%' }}>Description</th>
+                            <th style={{ width: '45%' }}>Description</th>
                             <th style={{ width: '20%', textAlign: 'right' }}>Amt</th>
                             <th style={{ width: '10%' }}></th>
                         </tr>
@@ -132,6 +146,7 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
                                         transaction={transaction}
                                         onTouchMove={handleTouchMove.bind(undefined, i)}
                                         onTouchEnd={handleTouchEnd}
+                                        onRemoveTransaction={onRemoveTransaction}
                                     />
                                     {
                                         touchedY !== undefined && isYInElem(listElems.current[i], touchedY) &&

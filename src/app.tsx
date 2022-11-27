@@ -60,7 +60,10 @@ const App: FunctionComponent = () => {
                     } />
 
                     <Route path='transactions' element={
-                        <AllTransactions list={transactionList} onRearrange={moveTransaction} />
+                        <AllTransactions
+                            list={transactionList}
+                            onRearrange={moveTransaction}
+                            onRemoveTransaction={removeTransaction} />
                     } />
 
                     <Route path='transactions/:transactionId' element={

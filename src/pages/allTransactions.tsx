@@ -11,14 +11,8 @@ function isYAboveElem(elem: HTMLElement, y: number) {
     return y <= rect.top;
 }
 
-function isYBelowElem(elem: HTMLElement, y: number) {
-    const rect = elem.getBoundingClientRect();
-    return y >= rect.bottom;
-}
-
 function getTargetIndex(elems: HTMLElement[], y: number) {
     if (isYAboveElem(elems[0], y)) return -1;
-    if (isYBelowElem(elems[elems.length - 1], y)) return elems.length - 1;
     const index = elems.findIndex(elem => isYInElem(elem, y));
     if (index === -1) return undefined;
     return index;
@@ -92,11 +86,7 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
                         >
                             <ListItem transaction={transaction} />
                             {
-                                touchedY !== undefined &&
-                                (
-                                    isYInElem(listElems.current[i], touchedY) ||
-                                    (i === list.length - 1 && isYBelowElem(listElems.current[i], touchedY))
-                                ) &&
+                                touchedY !== undefined && isYInElem(listElems.current[i], touchedY) &&
                                 <DropSpace />
                             }
                         </li>

@@ -54,7 +54,10 @@ const App: FunctionComponent = () => {
                     <Route path='transactions/:transactionId' element={
                         <Transaction list={transactionList} onSave={updateTransaction} />
                     } />
-                    <Route path='save' element={<Save onUpload={setTransactionList} />} />
+
+                    <Route path='save' element={
+                        <Save onUpload={setTransactionList} />
+                    } />
                 </Routes>
             </div>
         </div>

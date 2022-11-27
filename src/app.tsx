@@ -43,7 +43,7 @@ const App: FunctionComponent = () => {
             <div style={{ flex: '0 1 auto' }}>
                 <NavBar />
             </div>
-            <div className='px-2' style={{ flex: '1 1 auto' }}>
+            <div className='px-2' style={{ flex: '1 1 auto', overflow: 'scroll' }}>
                 <Routes>
                     <Route path='/' element={
                         <Home

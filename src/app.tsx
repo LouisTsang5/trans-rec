@@ -8,6 +8,7 @@ import { Route, Routes } from 'react-router-dom';
 import Transaction from './pages/transaction';
 import Save from './pages/save';
 import AllTransactions from './pages/allTransactions';
+import { immutableMove } from './lib/util';
 
 const startingList = loadList() ?? [];
 
@@ -38,6 +39,11 @@ const App: FunctionComponent = () => {
         setTransactionList([...transactionList]);
     };
 
+    const moveTransaction = (fromIndex: number, toIndex: number) => {
+        const newList = immutableMove(transactionList, fromIndex, toIndex);
+        setTransactionList(newList);
+    };
+
     return (
         <div style={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>
             <div style={{ flex: '0 1 auto' }}>
@@ -54,7 +60,7 @@ const App: FunctionComponent = () => {
                     } />
 
                     <Route path='transactions' element={
-                        <AllTransactions list={transactionList} />
+                        <AllTransactions list={transactionList} onRearrange={moveTransaction} />
                     } />
 
                     <Route path='transactions/:transactionId' element={

@@ -1,19 +1,5 @@
 import { FunctionComponent, useRef, useState } from 'react';
 
-// function immutableInert<T>(arr: T[], index: number, newItem: T): T[] {
-//     return [
-//         ...arr.slice(0, index),
-//         newItem,
-//         ...arr.slice(index)
-//     ];
-// }
-
-// function immutableMove<T>(arr: T[], curIndex: number, newIndex: number): T[] {
-//     const item = arr[curIndex];
-//     const newArr = arr.filter((val, i) => i !== curIndex);
-//     return immutableInert(newArr, newIndex > curIndex ? newIndex - 1 : newIndex, item);
-// }
-
 function isYInElem(elem: HTMLElement, y: number) {
     const rect = elem.getBoundingClientRect();
     const isInY = y >= rect.top && y <= rect.bottom;
@@ -25,8 +11,11 @@ function isYAboveElem(elem: HTMLElement, y: number) {
     return y <= rect.top;
 }
 
-type AllTransactionProps = {
-    list: TransactionData[],
+function getTargetIndex(elems: HTMLElement[], y: number) {
+    if (isYAboveElem(elems[0], y)) return -1;
+    const index = elems.findIndex(elem => isYInElem(elem, y));
+    if (index === -1) return undefined;
+    return index;
 }
 
 const ListItem: FunctionComponent<{ transaction: TransactionData }> = ({ transaction }) => {
@@ -54,24 +43,33 @@ const DropSpace: FunctionComponent = () => {
     );
 };
 
-const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list }) => {
+type AllTransactionProps = {
+    list: TransactionData[],
+    onRearrange: (from: number, to: number) => void,
+}
+
+const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearrange }) => {
     const listElems = useRef<HTMLElement[]>([]);
     const [touchedY, setTouchedY] = useState(undefined as number | undefined);
-    const [draggedItem, setDraggedItem] = useState(undefined as undefined | TransactionData);
+    const [draggedI, setDraggedI] = useState(undefined as undefined | number);
 
-    const handleTouchMove = (item: TransactionData, e: React.TouchEvent<HTMLLIElement>) => {
+    const handleTouchMove = (i: number, e: React.TouchEvent<HTMLLIElement>) => {
         setTouchedY(e.targetTouches[0].pageY);
-        setDraggedItem(item);
+        setDraggedI(i);
     };
 
     const handleTouchEnd = () => {
+        if (touchedY !== undefined && draggedI !== undefined) {
+            const targetIndex = getTargetIndex(listElems.current, touchedY);
+            if (targetIndex !== undefined) onRearrange(draggedI, targetIndex);
+        }
         setTouchedY(undefined);
-        setDraggedItem(undefined);
+        setDraggedI(undefined);
     };
 
     return (
         <>
-            <ul style={{ touchAction: 'none' }}>
+            <ul style={{ touchAction: 'none', padding: '0' }}>
                 {
                     touchedY !== undefined && isYAboveElem(listElems.current[0], touchedY) &&
                     <DropSpace />
@@ -82,8 +80,8 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list }) => {
                         <li
                             key={i}
                             ref={elem => listElems.current[i] = elem as HTMLElement}
-                            style={{ display: draggedItem === transaction ? 'none' : 'block' }}
-                            onTouchMove={handleTouchMove.bind(undefined, transaction)}
+                            style={{ display: draggedI === i ? 'none' : 'block' }}
+                            onTouchMove={handleTouchMove.bind(undefined, i)}
                             onTouchEnd={handleTouchEnd}
                         >
                             <ListItem transaction={transaction} />
@@ -95,13 +93,14 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list }) => {
                     </>))
                 }
                 {
-                    draggedItem !== undefined && touchedY !== undefined &&
+                    draggedI !== undefined && touchedY !== undefined &&
                     <li style={{
                         position: 'absolute',
+                        display: 'block',
                         left: `1rem`,
                         top: touchedY,
                     }} >
-                        <ListItem transaction={draggedItem} />
+                        <ListItem transaction={list[draggedI]} />
                     </li>
                 }
             </ul >

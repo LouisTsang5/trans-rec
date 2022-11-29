@@ -10,7 +10,7 @@ const Balance: FunctionComponent<BalanceProps> = ({ balance }) => {
             <span>Balance: </span>
             <span style={{
                 color: balance >= 0 ? 'green' : 'red'
-            }}>${balance}
+            }}>${balance.toFixed(2)}
             </span>
         </div>
     );

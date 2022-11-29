@@ -1,5 +1,6 @@
 import { FunctionComponent, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { scrollParentToChild } from '../../lib/util';
 import './transactionList.css';
 
 type TransactionList = {
@@ -9,8 +10,12 @@ type TransactionList = {
 
 const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTransaction }) => {
     //Scroll to bottom function
+    const listWrapperElem = useRef<HTMLDivElement>(null);
     const listBtmElem = useRef<HTMLDivElement>(null);
-    useEffect(() => listBtmElem.current?.scrollIntoView({ behavior: 'smooth' }), [list]);
+    useEffect(() => {
+        if (listWrapperElem.current && listBtmElem.current)
+            scrollParentToChild(listWrapperElem.current, listBtmElem.current);
+    }, [list]);
 
     //Navigation to transaction detail page
     const navigate = useNavigate();
@@ -30,7 +35,7 @@ const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTra
                     </tr>
                 </thead>
             </table>
-            <div className='body-wrapper'>
+            <div className='body-wrapper' ref={listWrapperElem}>
                 <table className='table'>
                     <tbody>
                         {list.map(data => (
@@ -61,7 +66,7 @@ const TransactionList: FunctionComponent<TransactionList> = ({ list, onRemoveTra
                         ))}
                     </tbody>
                 </table>
-                {/* For scrolling to bottom automatically*/}
+                {/* For scrolling to bottom automatically */}
                 <div ref={listBtmElem}></div>
             </div>
         </>

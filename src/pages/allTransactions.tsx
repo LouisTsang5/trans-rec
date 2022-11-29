@@ -1,5 +1,6 @@
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { scrollParentToChild } from '../lib/util';
 
 function isYInElem(elem: HTMLElement, y: number) {
     const rect = elem.getBoundingClientRect();
@@ -103,6 +104,13 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
     const listElems = useRef<HTMLElement[]>([]);
     const [touchedY, setTouchedY] = useState(undefined as number | undefined);
     const [draggedI, setDraggedI] = useState(undefined as undefined | number);
+    const tableLastRowElem = useRef<HTMLTableRowElement>(null);
+    const tableWrapper = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (tableWrapper.current && tableLastRowElem.current)
+            scrollParentToChild(tableWrapper.current, tableLastRowElem.current);
+    });
 
     const handleTouchMove = (i: number, e: React.TouchEvent<HTMLElement>) => {
         setTouchedY(e.targetTouches[0].pageY);
@@ -133,7 +141,7 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
                     </thead>
                 </table>
 
-                <div style={{ flex: '1 1 auto', overflowY: 'scroll' }}>
+                <div style={{ flex: '1 1 auto', overflowY: 'scroll' }} ref={tableWrapper}>
                     <table className='table'>
                         <tbody>
                             {
@@ -169,6 +177,7 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
                                     <ListItem transaction={list[draggedI]} />
                                 </tr>
                             }
+                            <tr ref={tableLastRowElem}></tr>
                         </tbody>
                     </table>
                 </div>

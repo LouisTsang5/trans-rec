@@ -39,11 +39,11 @@ const ListItem: FunctionComponent<{
     return (
         <>
             <td
-                style={{ width: '5%', padding: '0rem', touchAction: 'none' }}
+                style={{ width: '5%', touchAction: 'none', padding: '0.4rem' }}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" height="25%" width="40%" fill="grey" className="bi bi-x" viewBox="-5 0 40 125">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" fill="grey" className="bi bi-x" viewBox="-5 0 40 125">
                     <path xmlns="http://www.w3.org/2000/svg" className="cls-1" d="M15,0A15,15,0,1,1,0,15,15,15,0,0,1,15,0Zm0,92.93a15,15,0,1,1-15,15,15,15,0,0,1,15-15Zm0-46.47a15,15,0,1,1-15,15,15,15,0,0,1,15-15Z" />
                 </svg>
             </td>

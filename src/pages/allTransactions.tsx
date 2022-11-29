@@ -39,20 +39,24 @@ const ListItem: FunctionComponent<{
     return (
         <>
             <td
-                style={{ width: '5%', touchAction: 'none', padding: '0.4rem' }}
+                style={{ width: '10%', touchAction: 'none', padding: '0.5rem' }}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" fill="grey" className="bi bi-x" viewBox="-5 0 40 125">
-                    <path xmlns="http://www.w3.org/2000/svg" className="cls-1" d="M15,0A15,15,0,1,1,0,15,15,15,0,0,1,15,0Zm0,92.93a15,15,0,1,1-15,15,15,15,0,0,1,15-15Zm0-46.47a15,15,0,1,1-15,15,15,15,0,0,1,15-15Z" />
-                </svg>
+                <div
+                    className='d-flex justify-content-center align-items-end'
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="grey" className="bi bi-x" viewBox="-5 0 40 125">
+                        <path xmlns="http://www.w3.org/2000/svg" className="cls-1" d="M15,0A15,15,0,1,1,0,15,15,15,0,0,1,15,0Zm0,92.93a15,15,0,1,1-15,15,15,15,0,0,1,15-15Zm0-46.47a15,15,0,1,1-15,15,15,15,0,0,1,15-15Z" />
+                    </svg>
+                </div>
             </td>
 
             <td style={{ width: '20%' }}>
                 {date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
             </td>
 
-            <td style={{ width: '45%' }} onClick={onClickTransaction}>
+            <td style={{ width: '40%' }} onClick={onClickTransaction}>
                 {description}
             </td>
 
@@ -120,9 +124,9 @@ const AllTransactions: FunctionComponent<AllTransactionProps> = ({ list, onRearr
                 <table className='table mb-0' style={{ flex: '0 1 auto' }}>
                     <thead>
                         <tr>
-                            <th style={{ width: '5%' }}></th>
+                            <th style={{ width: '10%' }}></th>
                             <th style={{ width: '20%' }}>Date</th>
-                            <th style={{ width: '45%' }}>Description</th>
+                            <th style={{ width: '40%' }}>Description</th>
                             <th style={{ width: '20%', textAlign: 'right' }}>Amt</th>
                             <th style={{ width: '10%' }}></th>
                         </tr>

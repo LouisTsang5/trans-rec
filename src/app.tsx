@@ -45,7 +45,7 @@ const App: FunctionComponent = () => {
     };
 
     return (
-        <div style={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>
+        <div style={{ display: 'flex', flexFlow: 'column', height: '90vh' }}>
             <div style={{ flex: '0 1 auto' }}>
                 <NavBar />
             </div>

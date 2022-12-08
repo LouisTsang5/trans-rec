@@ -41,6 +41,12 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
         return !hasError;
     };
 
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newAmount = parseFloat(e.target.value);
+        if (!isNaN(newAmount)) setData({ ...data, amount: newAmount });
+        else setData({ ...data, amount: 0 });
+    };
+
     return (
         <form>
             <div className='row'>
@@ -90,8 +96,7 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
                         min="0"
                         type="number"
                         step="0.01"
-                        value={data.amount}
-                        onChange={(e) => setData({ ...data, amount: parseFloat(e.target.value) })}
+                        onChange={handleAmountChange}
                     />
                 </div>
                 <div className='col-4 form-group d-flex justify-content-center align-items-end'>

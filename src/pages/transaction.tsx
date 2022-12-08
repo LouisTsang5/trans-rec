@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useErrorInput } from '../lib/errorInput/errorInput';
 import { getDisplayName, getTransactionType, transactionTypeDisplayMap } from '../lib/transaction';
 
 type TransactionProps = {
@@ -22,10 +23,32 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
     const navigate = useNavigate();
     const [isSaved, setIsSaved] = useState(false);
     const [updatedData, setUpdatedData] = useState(toUpdatedTransactionData(transaction));
+    const [isDescError, setIsDescError] = useErrorInput(false);
+    const [isAmtError, setIsAmtError] = useErrorInput(false);
     useEffect(() => setUpdatedData(transaction), [transaction]);
+
+    const handleDataCheck = () => {
+        let hasError = false;
+        if (!updatedData.description) {
+            setIsDescError(true);
+            hasError = true;
+        }
+        if (!updatedData.amount) {
+            setIsAmtError(true);
+            hasError = true;
+        }
+        return !hasError;
+    };
+
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newAmount = parseFloat(e.target.value);
+        if (!isNaN(newAmount)) setUpdatedData(prev => ({ ...prev, amount: newAmount }));
+        else setUpdatedData(prev => ({ ...prev, amount: 0 }));
+    };
 
     const onClickSave = (e: React.MouseEvent) => {
         e.preventDefault();
+        if (!handleDataCheck()) return;
         onSave(transaction.id, updatedData);
         setIsSaved(true);
         navigate(-1);
@@ -65,8 +88,8 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
                 <div className='form-group'>
                     <label>Description</label>
                     <input type='text'
-                        className='form-control'
-                        value={updatedData.description}
+                        className={`form-control ${isDescError ? 'error' : ''}`}
+                        defaultValue={updatedData.description}
                         onChange={(e) => setUpdatedData(prev => ({ ...prev, description: e.target.value }))}
                     />
                 </div>
@@ -76,9 +99,9 @@ const Transaction: FunctionComponent<TransactionProps> = ({ list, onSave }) => {
                     <input type='number'
                         min='0'
                         step='0.01'
-                        className='form-control'
-                        value={updatedData.amount.toFixed(2)}
-                        onChange={(e) => setUpdatedData(prev => ({ ...prev, amount: parseFloat(e.target.value) }))}
+                        className={`form-control ${isAmtError ? 'error' : ''}`}
+                        defaultValue={updatedData.amount.toFixed(2)}
+                        onChange={handleAmountChange}
                     />
                 </div>
                 <div className='form-group row my-2'>

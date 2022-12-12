@@ -3,12 +3,18 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar: FunctionComponent = () => {
     const navigate = useNavigate();
+
+    const handleNavigation = (e: React.MouseEvent, to: string) => {
+        e.preventDefault();
+        navigate(to);
+    };
+
     return (
         <nav className="navbar navbar-light bg-light px-1 d-flex">
             <div className='w-25' style={{ visibility: 'hidden' }}>A</div>
 
             <div className='w-50 d-flex justify-content-center'>
-                <a className="navbar-brand" href="#" onClick={() => navigate('/')} style={{ marginRight: 0 }}>
+                <a className="navbar-brand" onClick={(e) => handleNavigation(e, '/')} style={{ marginRight: 0 }}>
                     <img src="/favicon.ico" width={30} height={30} className="d-inline-block align-top" />
                     <span className="px-1">TransRec</span>
                 </a>
@@ -20,8 +26,8 @@ const NavBar: FunctionComponent = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                        <li><a className="dropdown-item" href="#" onClick={() => navigate('save')}>Save</a></li>
-                        <li><a className="dropdown-item" href="#" onClick={() => navigate('transactions')}>Transactions</a></li>
+                        <li><a className="dropdown-item" onClick={(e) => handleNavigation(e, 'save')}>Save</a></li>
+                        <li><a className="dropdown-item" onClick={(e) => handleNavigation(e, 'transactions')}>Transactions</a></li>
                     </ul>
                 </div>
             </div>

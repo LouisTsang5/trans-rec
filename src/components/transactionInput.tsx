@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useErrorInput } from '../lib/errorInput/errorInput';
 import { getDisplayName, getTransactionType, transactionTypeDisplayMap } from '../lib/transaction';
@@ -20,12 +20,14 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
     const [data, setData] = useState(startFormData);
     const [isDescError, setIsDescError] = useErrorInput(false);
     const [isAmtError, setIsAmtError] = useErrorInput(false);
+    const inputElem = useRef<HTMLInputElement>(null);
 
     const handleAddTransaction = (e: React.MouseEvent) => {
         e.preventDefault();
         if (!handleDataCheck()) return;
         onAddTransaction({ ...data, id: uuidv4() });
         setData(startFormData);
+        if (inputElem.current) inputElem.current.value = '';
     };
 
     const handleDataCheck = () => {
@@ -97,6 +99,7 @@ const TransactionInput: FunctionComponent<TransactionInputProps> = ({ onAddTrans
                         type="number"
                         step="0.01"
                         onChange={handleAmountChange}
+                        ref={inputElem}
                     />
                 </div>
                 <div className='col-4 form-group d-flex justify-content-center align-items-end'>

@@ -1,17 +1,5 @@
 import { FunctionComponent, useMemo, useState } from 'react';
-
-const getLastMonth = () => {
-    const cur = new Date();
-    const start = new Date(cur.getFullYear(), cur.getMonth() - 1, 1);
-    const end = new Date(cur.getFullYear(), cur.getMonth(), 0);
-    return { start, end };
-};
-
-const getMonthToDate = () => {
-    const cur = new Date();
-    const start = new Date(cur.getFullYear(), cur.getMonth(), 1);
-    return { start, end: cur };
-};
+import { toYyyyMmDd, getLastMonth, getMonthToDate } from '../lib/util';
 
 const trySetDate = (setter: (date: Date | undefined) => void, val: string, fallback: Date | undefined) => {
     const newDate = new Date(val);
@@ -19,10 +7,6 @@ const trySetDate = (setter: (date: Date | undefined) => void, val: string, fallb
         setter(new Date(val));
     else
         setter(fallback);
-};
-
-const toYyyyMmDd = (date: Date) => {
-    return `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
 const getTopSpendingTrans = (transactions: TransactionData[], topN: number) => {

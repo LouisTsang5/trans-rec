@@ -40,3 +40,20 @@ export function scrollParentToChild(parent: HTMLElement, child: HTMLElement) {
     }
 
 }
+
+export const getLastMonth = () => {
+    const cur = new Date();
+    const start = new Date(cur.getFullYear(), cur.getMonth() - 1, 1);
+    const end = new Date(cur.getFullYear(), cur.getMonth(), 0);
+    return { start, end };
+};
+
+export const getMonthToDate = () => {
+    const cur = new Date();
+    const start = new Date(cur.getFullYear(), cur.getMonth(), 1);
+    return { start, end: cur };
+};
+
+export const toYyyyMmDd = (date: Date) => {
+    return `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+};

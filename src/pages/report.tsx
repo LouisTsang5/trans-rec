@@ -1,4 +1,5 @@
 import { FunctionComponent, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toYyyyMmDd, getLastMonth, getMonthToDate } from '../lib/util';
 
 const trySetDate = (setter: (date: Date | undefined) => void, val: string, fallback: Date | undefined) => {
@@ -35,6 +36,7 @@ type ReportResultProps = {
 }
 
 const ReportResult: FunctionComponent<ReportResultProps> = ({ transactions, from, to }) => {
+    const navigate = useNavigate();
     const topN = 10;
     const filteredTrans = useMemo(() => from && to ? transactions.filter(t => t.type === 'w' && t.date >= from && t.date <= to) : [], [from, to]);
     const totalSpending = useMemo(() => filteredTrans.length > 0 ? filteredTrans.map(t => t.amount).reduce((acc, cur) => acc + cur) : undefined, [filteredTrans]);
@@ -49,7 +51,11 @@ const ReportResult: FunctionComponent<ReportResultProps> = ({ transactions, from
                 {
                     highestSpendingTrans.length > 0 &&
                     highestSpendingTrans.map((transaction, i) => (
-                        <span key={transaction.id} style={{ display: 'block', textAlign: 'center', fontSize: `${1.5 - (i / 10)}rem` }}>{`${transaction.description} - $${transaction.amount.toFixed(2)}`} </span>
+                        <span
+                            key={transaction.id}
+                            style={{ display: 'block', textAlign: 'center', fontSize: `${1.5 - (i / 10)}rem` }}
+                            onClick={() => navigate(`/transactions/${transaction.id}`)}
+                        >{`${transaction.description} - $${transaction.amount.toFixed(2)}`} </span>
                     ))
                 }
             </div>

@@ -25,6 +25,25 @@ const toYyyyMmDd = (date: Date) => {
     return `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
+const getTopSpendingTrans = (transactions: TransactionData[], topN: number) => {
+    let topTrans: TransactionData[] = [];
+    transactions.forEach(tran => {
+        //Insert if not list is not filled
+        if (topTrans.length < topN) {
+            topTrans = [...topTrans, tran];
+            return;
+        }
+        //If the current transaction amount is higher than any transaction in the list, insert it to the top list and remove the lowest amount transaction in the list
+        if (topTrans.some(topTran => tran.amount > topTran.amount)) {
+            topTrans = [...topTrans, tran];
+            const lowestTran = topTrans.reduce((prev, cur) => prev.amount <= cur.amount ? prev : cur);
+            topTrans = topTrans.filter(topTran => topTran !== lowestTran);
+            return;
+        }
+    });
+    return topTrans.sort((a, b) => b.amount - a.amount); //return in descending order
+};
+
 type ReportResultProps = {
     transactions: TransactionData[],
     from: Date,
@@ -32,16 +51,23 @@ type ReportResultProps = {
 }
 
 const ReportResult: FunctionComponent<ReportResultProps> = ({ transactions, from, to }) => {
+    const topN = 10;
     const filteredTrans = useMemo(() => from && to ? transactions.filter(t => t.type === 'w' && t.date >= from && t.date <= to) : [], [from, to]);
     const totalSpending = useMemo(() => filteredTrans.length > 0 ? filteredTrans.map(t => t.amount).reduce((acc, cur) => acc + cur) : undefined, [filteredTrans]);
-    const highestSpendingTrans = useMemo(() => filteredTrans.length > 0 ? filteredTrans.reduce((prev, cur) => prev.amount > cur.amount ? prev : cur) : undefined, [filteredTrans]);
+    const highestSpendingTrans = useMemo(() => getTopSpendingTrans(filteredTrans, topN), [filteredTrans]);
+
     return (
         <>
             <div style={{ marginTop: '1rem' }}>
                 <span style={{ display: 'block' }}>Total Spending:</span>
                 <span style={{ display: 'block', textAlign: 'center', fontSize: '1.5rem' }}>{totalSpending ? `$${totalSpending.toFixed(2)}` : 'N/A'}</span>
-                <span style={{ display: 'block' }}>Highest Spending Item:</span>
-                <span style={{ display: 'block', textAlign: 'center', fontSize: '1.5rem' }}>{highestSpendingTrans ? `${highestSpendingTrans.description} - $${highestSpendingTrans.amount.toFixed(2)}` : 'N/A'} </span>
+                <span style={{ display: 'block' }}>Top {topN} Highest Spending Item:</span>
+                {
+                    highestSpendingTrans.length > 0 &&
+                    highestSpendingTrans.map((transaction, i) => (
+                        <span key={transaction.id} style={{ display: 'block', textAlign: 'center', fontSize: `${1.5 - (i / 10)}rem` }}>{`${transaction.description} - $${transaction.amount.toFixed(2)}`} </span>
+                    ))
+                }
             </div>
         </>
     );

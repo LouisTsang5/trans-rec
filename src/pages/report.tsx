@@ -47,16 +47,16 @@ const ReportResult: FunctionComponent<ReportResultProps> = ({ transactions, from
             <div style={{ marginTop: '1rem' }}>
                 <span style={{ display: 'block' }}>Total Spending:</span>
                 <span style={{ display: 'block', textAlign: 'center', fontSize: '1.5rem' }}>{totalSpending ? `$${totalSpending.toFixed(2)}` : 'N/A'}</span>
-                <span style={{ display: 'block' }}>Top {topN} Highest Spending Item:</span>
+                <span style={{ display: 'block' }}>Top {topN} Items:</span>
                 {
                     highestSpendingTrans.length > 0 ?
-                    highestSpendingTrans.map((transaction, i) => (
-                        <span
-                            key={transaction.id}
-                            style={{ display: 'block', textAlign: 'center', fontSize: `${1.5 - (i / 10)}rem` }}
-                            onClick={() => navigate(`/transactions/${transaction.id}`)}
-                        >{`${transaction.description} - $${transaction.amount.toFixed(2)}`} </span>
-                    ))
+                        highestSpendingTrans.map((transaction, i) => (
+                            <span
+                                key={transaction.id}
+                                style={{ display: 'block', textAlign: 'center', fontSize: `${1.5 - (i / 10)}rem` }}
+                                onClick={() => navigate(`/transactions/${transaction.id}`)}
+                            >{`${transaction.description} - $${transaction.amount.toFixed(2)}`} </span>
+                        ))
                         :
                         (<span style={{ display: 'block', textAlign: 'center', fontSize: '1.5rem' }}>N/A</span>)
                 }

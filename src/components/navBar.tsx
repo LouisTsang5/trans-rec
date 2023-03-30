@@ -29,6 +29,7 @@ const NavBar: FunctionComponent = () => {
                         <li><a className="dropdown-item" onClick={(e) => handleNavigation(e, 'save')}>Save</a></li>
                         <li><a className="dropdown-item" onClick={(e) => handleNavigation(e, 'transactions')}>Transactions</a></li>
                         <li><a className="dropdown-item" onClick={(e) => handleNavigation(e, 'report')}>Report</a></li>
+                        <li><a className="dropdown-item" onClick={(e) => handleNavigation(e, 'bus')}>Bus</a></li>
                     </ul>
                 </div>
             </div>

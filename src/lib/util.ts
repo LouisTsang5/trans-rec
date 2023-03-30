@@ -57,3 +57,17 @@ export const getMonthToDate = () => {
 export const toYyyyMmDd = (date: Date) => {
     return `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
+
+type Func<T extends unknown[], R> = (...a: T) => R;
+export function debounce<T extends unknown[], R>(func: Func<T, R>, msDelay: number) {
+    let timeoutId: ReturnType<typeof setTimeout> | null;
+    return function (...args: T) {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            func.call(null, ...args);
+            timeoutId = null;
+        }, msDelay);
+    };
+}

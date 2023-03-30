@@ -1,4 +1,4 @@
-export function hasKey<T>(object: T, key: PropertyKey): key is keyof object {
+export function hasKey<T extends object>(object: T, key: PropertyKey): key is keyof object {
     return key in object;
 }
 

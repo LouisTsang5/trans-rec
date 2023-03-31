@@ -1,9 +1,8 @@
-import { StopEta } from './common';
+import { Bound, StopEta } from './common';
 
 const baseUrl = new URL('https://rt.data.gov.hk');
-type Company = 'NWFB' | 'CTB';
+export type Company = 'NWFB' | 'CTB';
 type Direction = 'inbound' | 'outbound';
-type Dir = 'I' | 'O';
 
 type CtbApiResponse<T> = {
     type: string,
@@ -12,7 +11,7 @@ type CtbApiResponse<T> = {
     data: T
 }
 
-type CtbRoute = {
+export type CtbRoute = {
     co: Company,
     route: string,
     orig_tc: string,
@@ -27,7 +26,7 @@ type CtbRoute = {
 type CtbRouteStop = {
     co: Company,
     route: string,
-    dir: Dir,
+    dir: Bound,
     seq: number,
     stop: string,
     data_timestamp: Date,
@@ -46,7 +45,7 @@ type CtbStop = {
 type CtbStopEta = {
     co: Company,
     route: string,
-    dir: Dir,
+    dir: Bound,
     seq: number,
     stop: string,
     eta_seq: number,

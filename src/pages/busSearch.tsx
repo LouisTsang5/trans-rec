@@ -1,20 +1,14 @@
 import { FunctionComponent, useMemo, useState } from 'react';
-import { getRoutes } from '../lib/busStop/kmb';
+import { getAllRoutes, RouteInfo } from '../lib/busStop/common';
 import { debounce } from '../lib/util';
-
-type BusInfo = {
-    number: string,
-    from: string,
-    to: string,
-}
 
 const MAX_LIST_ITEMS = 50;
 const DEBOUNCE_DELAY_MS = 500;
 
 async function searchBus(busNum: string) {
-    const allBuses = await getRoutes();
-    const busInfoList: BusInfo[] = allBuses.map(b => ({ number: b.route, from: b.orig_tc, to: b.dest_tc }));
-    return busInfoList.filter(b => b.number.startsWith(busNum)).slice(0, MAX_LIST_ITEMS).sort((a, b) => a.number.localeCompare(b.number));
+    if (!busNum) return [];
+    const allRoutes = await getAllRoutes();
+    return allRoutes.filter(b => b.number.startsWith(busNum)).slice(0, MAX_LIST_ITEMS).sort((a, b) => a.number.localeCompare(b.number));
 }
 
 const SearchBar: FunctionComponent<{ onSearch: (busNum: string) => void }> = ({ onSearch }) => {
@@ -34,18 +28,22 @@ const SearchBar: FunctionComponent<{ onSearch: (busNum: string) => void }> = ({ 
     );
 };
 
-const BusList: FunctionComponent<{ list: BusInfo[] }> = ({ list }) => {
+const BusList: FunctionComponent<{ list: RouteInfo[] }> = ({ list }) => {
     return (
         <ul>
-            {list.map(({ number, from, to }, i) => (
-                <li key={i}><span>{number} {from} {'->'} {to}</span></li>
+            {list.map(({ number, from, to, company, bound }, i) => (
+                <li key={i}>
+                    <span>{number}</span><span> {company} {bound}</span>
+                    <br />
+                    <span>{from} {'->'} {to}</span>
+                </li>
             ))}
         </ul>
     );
 };
 
 export const BusSearch: FunctionComponent = () => {
-    const [busInfoList, setBusInfoList] = useState<BusInfo[]>([]);
+    const [busInfoList, setBusInfoList] = useState<RouteInfo[]>([]);
     const search = async (num: string) => setBusInfoList(await searchBus(num));
 
     return (

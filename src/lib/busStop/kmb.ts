@@ -1,6 +1,4 @@
-import { StopEta } from './common';
-
-type Bound = 'I' | 'O';
+import { Bound, StopEta } from './common';
 
 type KmbBusApiResponse<T> = {
     type: string,
@@ -9,9 +7,9 @@ type KmbBusApiResponse<T> = {
     data: T,
 };
 
-type KmbRoute = {
+export type KmbRoute = {
     route: string,
-    bound: string,
+    bound: Bound,
     service_type: string,
     orig_en: string,
     orig_tc: string,

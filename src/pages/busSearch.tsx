@@ -13,7 +13,10 @@ const SearchBar: FunctionComponent<{ onSearch: (busNum: string) => void }> = ({ 
                 <span>Bus</span>
                 <input
                     onFocus={e => e.target.value = ''}
-                    onChange={e => debouncedSearch(e.target.value.toUpperCase())}
+                    onChange={e => {
+                        e.target.value = e.target.value.toUpperCase();
+                        debouncedSearch(e.target.value.toUpperCase());
+                    }}
                     className={`form-control`}
                     type="text"
                 />

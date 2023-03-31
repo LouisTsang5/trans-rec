@@ -9,7 +9,7 @@ type KmbBusApiResponse<T> = {
     data: T,
 };
 
-type KmbBusRoute = {
+type KmbRoute = {
     route: string,
     bound: string,
     service_type: string,
@@ -30,7 +30,7 @@ type KmbRouteStop = {
     stop: string,
 }
 
-type KmbBusStop = {
+type KmbStop = {
     stop: string,
     name_tc: string,
     name_en: string,
@@ -61,7 +61,7 @@ const baseUrl = new URL('https://data.etabus.gov.hk');
 
 export async function getRoutes() {
     const res = await fetch(new URL('/v1/transport/kmb/route/', baseUrl));
-    const routes = (await res.json() as KmbBusApiResponse<KmbBusRoute[]>).data;
+    const routes = (await res.json() as KmbBusApiResponse<KmbRoute[]>).data;
     return routes;
 }
 
@@ -76,7 +76,7 @@ async function getRouteStops(route: string, bound: Bound, serviceType: string) {
 async function getStop(stopId: string) {
     const url = new URL(`/v1/transport/kmb/stop/${stopId}`, baseUrl);
     const res = await fetch(url);
-    const stop = (await res.json() as KmbBusApiResponse<KmbBusStop>).data;
+    const stop = (await res.json() as KmbBusApiResponse<KmbStop>).data;
     return stop;
 }
 

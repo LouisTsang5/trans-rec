@@ -1,3 +1,5 @@
+import { StopEta } from './common';
+
 type Bound = 'I' | 'O';
 
 type KmbBusApiResponse<T> = {
@@ -83,20 +85,6 @@ async function getEtas(route: string, serviceType: string, stop: string) {
     const res = await fetch(url);
     const eta = (await res.json() as KmbBusApiResponse<KmbStopEta[]>).data;
     return eta;
-}
-
-type StopEta = {
-    seq: number,
-    stop_tc: string,
-    stop_sc: string,
-    stop_en: string,
-    etas: {
-        seq: number,
-        eta: Date,
-        remarksTc: string,
-        remarksSc: string,
-        remarksEn: string,
-    }[],
 }
 
 export async function getStopsEtas(route: string, bound: Bound, serviceType: string) {

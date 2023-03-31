@@ -1,3 +1,5 @@
+import { StopEta } from './common';
+
 const baseUrl = new URL('https://rt.data.gov.hk');
 type Company = 'NWFB' | 'CTB';
 type Direction = 'inbound' | 'outbound';
@@ -53,20 +55,6 @@ type CtbStopEta = {
     rmk_sc: string,
     rmk_en: string,
     data_timestamp: Date,
-}
-
-type StopEta = {
-    seq: number,
-    stop_tc: string,
-    stop_sc: string,
-    stop_en: string,
-    etas: {
-        seq: number,
-        eta: Date,
-        remarksTc: string,
-        remarksSc: string,
-        remarksEn: string,
-    }[],
 }
 
 export async function getRoutes(company: Company) {

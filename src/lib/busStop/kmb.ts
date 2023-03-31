@@ -1,3 +1,5 @@
+type Bound = 'I' | 'O';
+
 type KmbBusApiResponse<T> = {
     type: string,
     version: string,
@@ -61,7 +63,7 @@ export async function getRoutes() {
     return routes;
 }
 
-async function getRouteStops(route: string, bound: string, serviceType: string) {
+async function getRouteStops(route: string, bound: Bound, serviceType: string) {
     const direction = bound === 'O' ? 'outbound' : 'inbound';
     const url = new URL(`/v1/transport/kmb/route-stop/${route}/${direction}/${serviceType}`, baseUrl);
     const res = await fetch(url);
@@ -97,7 +99,7 @@ type StopEta = {
     }[],
 }
 
-export async function getStopsEtas(route: string, bound: string, serviceType: string) {
+export async function getStopsEtas(route: string, bound: Bound, serviceType: string) {
     const routeStops = await getRouteStops(route, bound, serviceType);
     const stopEtas: StopEta[] = [];
     await Promise.all(routeStops.map(async rs => {

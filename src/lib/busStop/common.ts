@@ -1,5 +1,6 @@
 import { Company as CtbCompany, CtbRoute, getRoutes as getCtbRoutes } from './ctb';
 import { KmbRoute, getRoutes as getKmbRoutes } from './kmb';
+import { getRoutes as getMtrRoutes, MtrRoute } from './mtr';
 
 export type StopEta = {
     seq: number,
@@ -16,7 +17,7 @@ export type StopEta = {
 }
 
 export type Bound = 'I' | 'O';
-type Company = CtbCompany | 'KMB';
+type Company = CtbCompany | 'KMB' | 'MTR';
 
 export type RouteInfo = {
     number: string,
@@ -24,23 +25,32 @@ export type RouteInfo = {
     to: string,
     company: Company,
     bound: Bound,
-    data: CtbRoute | KmbRoute,
+    data: CtbRoute | KmbRoute | MtrRoute,
 }
 
-function isCtbRoute(r: CtbRoute | KmbRoute): r is CtbRoute {
+function isCtbRoute(r: CtbRoute | KmbRoute | MtrRoute): r is CtbRoute {
     return 'co' in r;
 }
 
-function isCtbRoutes(rs: CtbRoute[] | KmbRoute[]): rs is CtbRoute[] {
+function isCtbRoutes(rs: CtbRoute[] | KmbRoute[] | MtrRoute[]): rs is CtbRoute[] {
     return rs.length === 0 || isCtbRoute(rs[0]);
+}
+
+function isKmbRoute(r: CtbRoute | KmbRoute | MtrRoute): r is KmbRoute {
+    return 'service_type' in r;
+}
+
+function isKmbRoutes(rs: CtbRoute[] | KmbRoute[] | MtrRoute[]): rs is KmbRoute[] {
+    return rs.length === 0 || isKmbRoute(rs[0]);
 }
 
 export async function getAllRoutes(): Promise<RouteInfo[]> {
     // Request all routes
-    const allRoutes: (CtbRoute[] | KmbRoute[])[] = await Promise.all([
+    const allRoutes: (CtbRoute[] | KmbRoute[] | MtrRoute[])[] = await Promise.all([
         getKmbRoutes(),
         getCtbRoutes('CTB'),
         getCtbRoutes('NWFB'),
+        getMtrRoutes(),
     ]);
 
     // Construct a route list
@@ -66,7 +76,7 @@ export async function getAllRoutes(): Promise<RouteInfo[]> {
                     data: r,
                 });
             });
-        } else {
+        } else if (isKmbRoutes(routes)) {
             // KMB
             routes.forEach(r => {
                 result.push({
@@ -76,6 +86,18 @@ export async function getAllRoutes(): Promise<RouteInfo[]> {
                     company: 'KMB',
                     bound: r.bound,
                     data: r,
+                });
+            });
+        } else {
+            // MTR
+            routes.forEach(r => {
+                result.push({
+                    number: r.route,
+                    from: r.from,
+                    to: r.to,
+                    company: r.company,
+                    bound: r.bound,
+                    data: r
                 });
             });
         }

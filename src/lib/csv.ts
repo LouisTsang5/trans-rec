@@ -1,5 +1,5 @@
 export function parse(csv: string): Csv {
-    const lines = csv.split(/\r?\n/);
+    const lines = csv.trim().split(/\r?\n/);
     const matrix = lines.map(l => l.split(','));
     const headers = matrix[0];
     const rows = matrix.splice(1);

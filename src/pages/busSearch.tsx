@@ -48,7 +48,7 @@ export const BusSearch: FunctionComponent = () => {
         setIsLoadingList(false);
     };
     useEffect(() => {
-        refreshRoutes();
+        refreshRoutes().then(() => console.log('Bus routes refreshed'));
     }, []);
 
     const [hitList, setHitList] = useState<RouteInfo[]>([]);

@@ -71,3 +71,8 @@ export function debounce<T extends unknown[], R>(func: Func<T, R>, msDelay: numb
         }, msDelay);
     };
 }
+
+export function calculateMinuteDiff(low: Date, high: Date) {
+    const diffInMs = high.getTime() - low.getTime();
+    return Math.floor(diffInMs / 1000 / 60);
+}

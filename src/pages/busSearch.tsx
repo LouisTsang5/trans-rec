@@ -28,12 +28,14 @@ const SearchBar: FunctionComponent<{ onSearch: (busNum: string) => void }> = ({ 
 
 const BusList: FunctionComponent<{ list: RouteInfo[] }> = ({ list }) => {
     return (
-        <ul>
-            {list.map(({ number, from, to, company, bound }, i) => (
-                <li key={i}>
-                    <span>{number}</span><span> {company} {bound}</span>
-                    <br />
-                    <span>{from} {'->'} {to}</span>
+        <ul className='list-group'>
+            {list.map(({ number, from, to, company }, i) => (
+                <li key={i} className='list-group-item' style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridTemplateRows: 'repeat(3, 1fr)' }} >
+                    <div style={{ gridRow: 'span 3', gridColumn: '1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <span style={{ fontSize: '1.8rem', fontWeight: 'bold', textAlign: 'center' }}>{number}</span>
+                    </div>
+                    <span style={{ gridRow: '1 / span 2', gridColumn: '2 / span 4', fontSize: '1.2rem', paddingLeft: '1rem' }}>{`${from} -> ${to}`}</span>
+                    <span style={{ gridRow: '3', gridColumn: '2 / span 4', fontSize: '0.8rem', paddingLeft: '1rem' }}>{company}</span>
                 </li>
             ))}
         </ul>

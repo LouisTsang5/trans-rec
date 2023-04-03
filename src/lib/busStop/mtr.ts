@@ -1,5 +1,5 @@
 import { parse } from '../csv';
-import { Bound } from './common';
+import { Bound, StopEta } from './common';
 
 export type MtrRoute = {
     route: string,
@@ -99,4 +99,30 @@ async function getSchedules(route: string) {
     const body = { language, routeName: route };
     const res = await fetch(url, { method: 'POST', body: JSON.stringify(body), headers: { 'content-type': 'application/json' } }).then(res => res.json() as Promise<MtrApiResponse>);
     return res.busStop;
+}
+
+export async function getStopsEtas(route: string, bound: Bound): Promise<StopEta[]> {
+    const [stops, schedules] = await Promise.all([getRouteStops(route, bound), getSchedules(route)]);
+    const result: StopEta[] = [];
+    stops.forEach(stop => {
+        const scheduledBuses = schedules.find(sch => sch.busStopId === stop.id)?.bus ?? [];
+        result.push({
+            seq: stop.seq,
+            stop_en: stop.name_en,
+            stop_tc: stop.name_tc,
+            stop_sc: stop.name_tc,
+            etas: scheduledBuses.map((b, i) => {
+                const timeSec = parseInt(stop.seq === 1 ? b.departureTimeInSecond : b.arrivalTimeInSecond); // use departure time instead of arrival time
+                const eta = new Date(new Date().getTime() + timeSec * 1000);
+                return {
+                    seq: i,
+                    eta,
+                    remarksEn: b.busRemark,
+                    remarksSc: b.busRemark,
+                    remarksTc: b.busRemark,
+                };
+            }),
+        });
+    });
+    return result;
 }

@@ -82,6 +82,7 @@ async function getEtas(route: string, serviceType: string, stop: string) {
     const url = new URL(`/v1/transport/kmb/eta/${stop}/${route}/${serviceType}`, baseUrl);
     const res = await fetch(url);
     const eta = (await res.json() as KmbBusApiResponse<KmbStopEta[]>).data;
+    eta.forEach(e => e.eta = new Date(e.eta));
     return eta;
 }
 

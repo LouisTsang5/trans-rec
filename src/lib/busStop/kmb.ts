@@ -57,8 +57,8 @@ type KmbStopEta = {
 
 const baseUrl = new URL('https://data.etabus.gov.hk');
 
-export async function getRoutes() {
-    const res = await fetch(new URL('/v1/transport/kmb/route/', baseUrl));
+export async function getRoutes(abortSignal?: AbortSignal) {
+    const res = await fetch(new URL('/v1/transport/kmb/route/', baseUrl), { signal: abortSignal });
     const routes = (await res.json() as KmbBusApiResponse<KmbRoute[]>).data;
     return routes;
 }

@@ -42,13 +42,15 @@ const BusList: FunctionComponent<{ list: RouteInfo[] }> = ({ list }) => {
 export const BusSearch: FunctionComponent = () => {
     const [routesList, setRoutesList] = useState<RouteInfo[]>([]);
     const [isLoadingList, setIsLoadingList] = useState(false);
-    const refreshRoutes = async () => {
+    const refreshRoutes = async (abortSignal?: AbortSignal) => {
         setIsLoadingList(true);
-        setRoutesList(await getAllRoutes());
+        setRoutesList(await getAllRoutes(abortSignal));
         setIsLoadingList(false);
     };
     useEffect(() => {
-        refreshRoutes().then(() => console.log('Bus routes refreshed'));
+        const abortController = new AbortController();
+        refreshRoutes(abortController.signal).then(() => console.log('Bus routes refreshed'));
+        return () => abortController.abort();
     }, []);
 
     const [hitList, setHitList] = useState<RouteInfo[]>([]);

@@ -21,9 +21,9 @@ export type MtrStop = {
 const COMPANY = 'MTR';
 const ROUTE_DELIMITER = '至';
 
-export async function getRoutes(): Promise<MtrRoute[]> {
+export async function getRoutes(abortSignal?: AbortSignal): Promise<MtrRoute[]> {
     const url = '/mtr_bus_routes.csv';
-    const text = await (await fetch(url)).text();
+    const text = await (await fetch(url, { signal: abortSignal })).text();
     const csv = parse(text);
     const result: MtrRoute[] = [];
     for (const [route, direction] of csv.rows) {

@@ -56,9 +56,9 @@ type CtbStopEta = {
     data_timestamp: Date,
 }
 
-export async function getRoutes(company: Company) {
+export async function getRoutes(company: Company, abortSignal?: AbortSignal) {
     const url = new URL(`/v1.1/transport/citybus-nwfb/route/${company}`, baseUrl);
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: abortSignal });
     return (await res.json() as CtbApiResponse<CtbRoute[]>).data;
 }
 

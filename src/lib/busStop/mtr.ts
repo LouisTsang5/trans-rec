@@ -61,3 +61,42 @@ export async function getRouteStops(route: string, bound: Bound): Promise<MtrSto
         name_tc: r[NAME_TC_INDEX],
     }));
 }
+
+type MtrBusSchedule = {
+    arrivalTimeInSecond: string,
+    arrivalTimeText: string,
+    busId: string,
+    busLocation: {
+        latitude: number,
+        longitude: number,
+    },
+    busRemark: string,
+    departureTimeInSecond: string,
+    departureTimeText: string,
+    isDelayed: '0' | '1',
+    isScheduled: '0' | '1',
+    lineRef: string,
+}
+
+type MtrBusStopSchedule = {
+    bus: MtrBusSchedule[],
+    busStopId: string,
+    isSuspended: '0' | '1',
+}
+
+type MtrApiResponse = {
+    appRefreshTimeInSecond: string,
+    busStop: MtrBusStopSchedule[],
+    footerRemarks: string,
+    routeName: string,
+    routeStatusTime: Date,
+    status: '0' | '1',
+}
+
+async function getSchedules(route: string) {
+    const url = 'https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule';
+    const language = 'zh';
+    const body = { language, routeName: route };
+    const res = await fetch(url, { method: 'POST', body: JSON.stringify(body), headers: { 'content-type': 'application/json' } }).then(res => res.json() as Promise<MtrApiResponse>);
+    return res.busStop;
+}

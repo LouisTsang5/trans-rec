@@ -28,7 +28,7 @@ export type RouteInfo = {
     data: CtbRoute | KmbRoute | MtrRoute,
 }
 
-function isCtbRoute(r: CtbRoute | KmbRoute | MtrRoute): r is CtbRoute {
+export function isCtbRoute(r: CtbRoute | KmbRoute | MtrRoute): r is CtbRoute {
     return 'co' in r;
 }
 
@@ -36,7 +36,7 @@ function isCtbRoutes(rs: CtbRoute[] | KmbRoute[] | MtrRoute[]): rs is CtbRoute[]
     return rs.length === 0 || isCtbRoute(rs[0]);
 }
 
-function isKmbRoute(r: CtbRoute | KmbRoute | MtrRoute): r is KmbRoute {
+export function isKmbRoute(r: CtbRoute | KmbRoute | MtrRoute): r is KmbRoute {
     return 'service_type' in r;
 }
 

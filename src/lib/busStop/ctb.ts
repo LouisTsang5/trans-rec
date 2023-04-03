@@ -77,7 +77,9 @@ async function getStop(stopId: string) {
 async function getStopEta(company: Company, stopId: string, route: string) {
     const url = new URL(`/v1.1/transport/citybus-nwfb/eta/${company}/${stopId}/${route}`, baseUrl);
     const res = await fetch(url);
-    return (await res.json() as CtbApiResponse<CtbStopEta[]>).data;
+    const result = (await res.json() as CtbApiResponse<CtbStopEta[]>).data;
+    result.forEach(e => e.eta = new Date(e.eta));
+    return result;
 }
 
 export async function getStopsEtas(company: Company, route: string, bound: Bound) {

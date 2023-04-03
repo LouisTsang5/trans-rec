@@ -59,7 +59,7 @@ export async function getRouteStops(route: string, bound: Bound): Promise<MtrSto
         long: parseFloat(r[LONG_INDEX]),
         name_en: r[NAME_EN_INDEX],
         name_tc: r[NAME_TC_INDEX],
-    }));
+    })).sort((a, b) => a.seq - b.seq);
 }
 
 type MtrBusSchedule = {

@@ -80,7 +80,8 @@ async function getStopEta(company: Company, stopId: string, route: string) {
     return (await res.json() as CtbApiResponse<CtbStopEta[]>).data;
 }
 
-export async function getStopsEtas(company: Company, route: string, direction: Direction) {
+export async function getStopsEtas(company: Company, route: string, bound: Bound) {
+    const direction: Direction = bound === 'I' ? 'inbound' : 'outbound';
     const rs = await getRouteStops(company, route, direction);
     const stops = await Promise.all(rs.map(async s => {
         const [stop, etas] = await Promise.all([getStop(s.stop), getStopEta(company, s.stop, route)]);

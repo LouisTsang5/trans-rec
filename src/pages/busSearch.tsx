@@ -8,9 +8,10 @@ const DEBOUNCE_DELAY_MS = 500;
 const SearchBar: FunctionComponent<{ onSearch: (busNum: string) => void }> = ({ onSearch }) => {
     const debouncedSearch = useMemo(() => debounce(onSearch, DEBOUNCE_DELAY_MS), [onSearch]);
     return (
-        <form>
+        <form style={{
+            marginBottom: '0.5rem'
+        }}>
             <div className='col-12 form-group'>
-                <span>Bus</span>
                 <input
                     onFocus={e => e.target.value = ''}
                     onChange={e => {

@@ -10,7 +10,7 @@ import Save from './pages/save';
 import AllTransactions from './pages/allTransactions';
 import { immutableMove } from './lib/util';
 import Report from './pages/report';
-import { BusSearch } from './pages/busSearch';
+import { Bus } from './pages/bus';
 
 const startingList = loadList() ?? [];
 
@@ -80,8 +80,8 @@ const App: FunctionComponent = () => {
                         <Report transactions={transactionList} />
                     } />
 
-                    <Route path='bus' element={
-                        <BusSearch />
+                    <Route path='bus/*' element={
+                        <Bus />
                     } />
                 </Routes>
             </div>

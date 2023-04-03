@@ -1,4 +1,5 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { getAllRoutes, RouteInfo } from '../lib/busStop/common';
 import { debounce } from '../lib/util';
 
@@ -42,7 +43,7 @@ const BusList: FunctionComponent<{ list: RouteInfo[] }> = ({ list }) => {
     );
 };
 
-export const BusSearch: FunctionComponent = () => {
+const BusSearch: FunctionComponent = () => {
     const [routesList, setRoutesList] = useState<RouteInfo[]>([]);
     const [isLoadingList, setIsLoadingList] = useState(false);
     const refreshRoutes = async (abortSignal?: AbortSignal) => {
@@ -74,5 +75,18 @@ export const BusSearch: FunctionComponent = () => {
 
             }
         </>
+    );
+};
+
+const BusSchedule: FunctionComponent = () => {
+    return <span>Schedule</span>;
+};
+
+export const Bus: FunctionComponent = () => {
+    return (
+        <Routes>
+            <Route path={`/`} element={<BusSearch />} />
+            <Route path={`/schedule`} element={<BusSchedule />} />
+        </Routes>
     );
 };

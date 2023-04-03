@@ -1,12 +1,14 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
-import { Bound, getAllRoutes, isCtbRoute, isKmbRoute, RouteInfo } from '../lib/busStop/common';
+import { Bound, getAllRoutes, isCtbRoute, isKmbRoute, RouteInfo, StopEta } from '../lib/busStop/common';
 import { getStopsEtas as getKmbStopsEtas } from '../lib/busStop/kmb';
 import { getStopsEtas as getCtbStopsEtas, Company as CtbCompany } from '../lib/busStop/ctb';
-import { debounce } from '../lib/util';
+import { getStopsEtas as getMtrStopsEtas } from '../lib/busStop/mtr';
+import { calculateMinuteDiff, debounce } from '../lib/util';
 
 const MAX_LIST_ITEMS = 50;
 const DEBOUNCE_DELAY_MS = 500;
+const MAX_NUM_ETA = 3;
 
 const SearchBar: FunctionComponent<{ onSearch: (busNum: string) => void }> = ({ onSearch }) => {
     const debouncedSearch = useMemo(() => debounce(onSearch, DEBOUNCE_DELAY_MS), [onSearch]);
@@ -109,10 +111,40 @@ const BusSchedule: FunctionComponent = () => {
     if (!route || !bound || !company) return errorJsx;
     if (company === 'KMB' && !serviceType) return errorJsx;
 
-    const pStopsEtas = company === 'KMB' ? getKmbStopsEtas(route, bound, serviceType as string) : getCtbStopsEtas(company as CtbCompany, route, bound);
-    pStopsEtas.then(se => console.log(se));
+    const [stopsEtas, setStopsEtas] = useState<StopEta[]>([]);
+    useEffect(() => {
+        (() => {
+            if (company === 'KMB') return getKmbStopsEtas(route, bound, serviceType as string);
+            else if (company === 'MTR') return getMtrStopsEtas(route, bound);
+            else return getCtbStopsEtas(company as CtbCompany, route, bound);
+        })()
+            .then(s => {
+                s.forEach(stop => stop.etas = stop.etas.slice(0, MAX_NUM_ETA));
+                setStopsEtas(s);
+            });
+    }, [searchParams]);
 
-    return <span>Schedule</span>;
+    return (
+        <ul className='list-group'>
+            {
+                stopsEtas.map((s, i) => (
+                    <li key={i} className='list-group-item'>
+                        <span>{s.stop_tc}</span>
+                        <ul className='list-group'>
+                            {
+                                s.etas.map((e, i) => (
+                                    <li key={i} className='list-group-item' style={{ display: 'flex' }}>
+                                        <span style={{ width: '25%' }}>{calculateMinuteDiff(new Date(), e.eta)} min</span>
+                                        <span style={{ width: '75%' }}>{e.remarksTc}</span>
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    </li>
+                ))
+            }
+        </ul>
+    );
 };
 
 export const Bus: FunctionComponent = () => {

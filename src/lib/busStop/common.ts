@@ -47,10 +47,22 @@ function isKmbRoutes(rs: CtbRoute[] | KmbRoute[] | MtrRoute[]): rs is KmbRoute[]
 export async function getAllRoutes(): Promise<RouteInfo[]> {
     // Request all routes
     const allRoutes: (CtbRoute[] | KmbRoute[] | MtrRoute[])[] = await Promise.all([
-        getKmbRoutes(),
-        getCtbRoutes('CTB'),
-        getCtbRoutes('NWFB'),
-        getMtrRoutes(),
+        getKmbRoutes().then(r => {
+            console.log('KMB routes ready');
+            return r;
+        }),
+        getCtbRoutes('CTB').then(r => {
+            console.log('CTB routes ready');
+            return r;
+        }),
+        getCtbRoutes('NWFB').then(r => {
+            console.log('NWFB routes ready');
+            return r;
+        }),
+        getMtrRoutes().then(r => {
+            console.log('MTR routes ready');
+            return r;
+        }),
     ]);
 
     // Construct a route list
